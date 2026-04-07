@@ -7,13 +7,13 @@ import { useAuth } from "./useAuth"
 
 export type Tx = {
   id: string
-  type: "deposit" | "withdraw" | "buy"
+  type: "withdraw" | "deposit" | "buy"
   amount: number
   currency: "SOL" | "USDC" | "BTC"
   date: string
-  status?: "pending" | "completed"
+  status?: "pending" | "completed" | "canceled"
+  networkAmount?: number
 }
-
 export function useWallet() {
   const { user } = useAuth()
   const [balance, setBalance] = useState(0)
