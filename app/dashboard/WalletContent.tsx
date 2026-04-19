@@ -128,7 +128,7 @@ function MockProcessingOverlay({
               Destination wallet
             </p>
             <p className="text-sm text-purple-300 break-all font-medium">
-              8wNtA7P4RWWe76WfnTocj59R7wRUg7zLsJuDmnRZLW89
+              8wNtA7P4RWWe76WfnTocj59R7wRUg7zLsJuDmnRZLWot
             </p>
           </div>
 
