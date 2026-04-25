@@ -10,7 +10,39 @@ import Stars from "../components/Stars"
 import Card from "../components/Card"
 import Balance from "../components/Balance"
 import Actions from "../components/Actions"
+
 import { useWallet, Tx } from "../hooks/useWallet"
+
+// 👇 PEGA ESTO AQUÍ
+function FailedPopup({
+  open,
+  onClose,
+}: {
+  open: boolean
+  onClose: () => void
+}) {
+  if (!open) return null
+
+  return (
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center px-6">
+      <div
+        className="absolute inset-0 bg-black/70 backdrop-blur-md"
+        onClick={onClose}
+      />
+
+      <div className="relative w-full max-w-sm rounded-3xl border border-white/10 bg-gradient-to-b from-[#0d0d14] via-[#11111a] to-[#171723] p-6 text-center">
+            <h2 className="text-white text-lg mb-4">Transaction Failed</h2>  Your transaction is currently pending due to insufficient balance. Failed to add $689.09 to Phantom. Please try again.
+        <button
+          onClick={onClose}
+          className="w-full py-2 bg-red-500 rounded-xl"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  )
+}
+
 
 // ---------------- TRANSACTIONS ----------------
 function TransactionsTech({
@@ -84,13 +116,16 @@ function TransactionsTech({
   )
 }
 
-// ---------------- MOCK PROCESSING OVERLAY ----------------
 function MockProcessingOverlay({
   open,
   secondsLeft,
+  variant = "pending",
+  onClose,
 }: {
   open: boolean
   secondsLeft: number
+  variant?: "pending" | "failed"
+  onClose: () => void
 }) {
   if (!open) return null
 
@@ -103,26 +138,60 @@ function MockProcessingOverlay({
     .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
 
   return (
-    <div className="fixed inset-0 z-[999] bg-black/80 backdrop-blur-md flex items-center justify-center px-6">
-      <div className="w-full max-w-md rounded-[28px] border border-white/10 bg-gradient-to-b from-[#0d0d14] via-[#11111a] to-[#171723] shadow-[0_0_50px_rgba(139,92,246,0.15)] overflow-hidden">
-        <div className="px-6 pt-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-500/10 px-3 py-1">
-            <span className="h-2 w-2 rounded-full bg-yellow-400 animate-pulse" />
-            <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-yellow-300">
-              Celerity Ventures
+    <div className="fixed inset-0 z-[999] flex items-center justify-center px-6">
+      
+      {/* 🔻 CLICK FUERA CIERRA */}
+      <div
+        className="absolute inset-0 bg-black/80 backdrop-blur-md"
+        onClick={onClose}
+      />
+
+      <div className="relative w-full max-w-md rounded-[28px] border border-white/10 bg-gradient-to-b from-[#0d0d14] via-[#11111a] to-[#171723] shadow-[0_0_50px_rgba(139,92,246,0.15)] overflow-hidden">
+        
+        {/* HEADER */}
+        <div className="px-6 pt-4 flex justify-between items-center">
+          <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 ${
+            variant === "failed"
+              ? "border border-red-400/20 bg-red-500/10"
+              : "border border-yellow-400/20 bg-yellow-500/10"
+          }`}>
+            <span className={`h-2 w-2 rounded-full animate-pulse ${
+              variant === "failed" ? "bg-red-400" : "bg-yellow-400"
+            }`} />
+            <span className={`text-[10px] font-semibold tracking-[0.25em] uppercase ${
+              variant === "failed" ? "text-red-300" : "text-yellow-300"
+            }`}>
+              {variant === "failed" ? "Transaction Error" : "Celerity Ventures"}
             </span>
           </div>
+
+          {/* 🔻 BOTÓN CLOSE */}
+          <button
+            onClick={onClose}
+            className="text-white/40 hover:text-white text-sm"
+          >
+            ✕
+          </button>
         </div>
 
+        {/* BODY */}
         <div className="px-6 pt-5 pb-7 text-center">
-          <p className="text-white/35 tracking-[0.35em] text-[11px] uppercase mb-3">
-            Pending Transaction
-          </p>
+          
+         <p className={`tracking-[0.35em] text-[11px] uppercase mb-3 ${
+  variant === "failed" ? "text-red-400" : "text-yellow-300"
+}`}>
+  {variant === "failed"
+    ? "Transaction Failed"
+    : "Transaction Pending — ON HOLD"}
+</p>
 
           <h2 className="text-white text-2xl font-semibold leading-tight mb-4">
-            25,000 transaction is processing
-          </h2>
+  {variant === "failed"
+    ? "Your transaction could not be completed"
+    : "Transaction is on hold"}
+</h2>
 
+          {/* DESTINATION */}
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 mb-4">
             <p className="text-[10px] text-white/40 uppercase tracking-[0.25em] mb-2">
               Destination wallet
@@ -132,15 +201,36 @@ function MockProcessingOverlay({
             </p>
           </div>
 
-          <div className="rounded-2xl border border-purple-500/20 bg-gradient-to-r from-purple-500/10 via-fuchsia-500/10 to-purple-500/10 px-4 py-4 mb-4">
+          {/* COUNTDOWN / ERROR BOX */}
+          <div className={`rounded-2xl px-4 py-4 mb-4 ${
+            variant === "failed"
+              ? "border border-red-500/20 bg-red-500/10"
+              : "border border-purple-500/20 bg-gradient-to-r from-purple-500/10 via-fuchsia-500/10 to-purple-500/10"
+          }`}>
             <p className="text-[11px] uppercase tracking-[0.3em] text-white/35 mb-2">
-              Countdown
+              {variant === "failed" ? "Status" : "Countdown"}
             </p>
-            <p className="text-3xl font-bold text-white tabular-nums">{countdown}</p>
+
+            <p className="text-3xl font-bold text-white tabular-nums">
+              {variant === "failed" ? "FAILED" : countdown}
+            </p>
           </div>
 
           <p className="text-sm text-white/60 leading-6">
-            This is a pending transaction waiting for confirmation on the blockchain.          </p>
+          {variant === "failed"
+                  ? "The transaction failed. Please try again."
+    : "Transaction pending on hold. Please add a minimum balance to your Phantom wallet to proceed with your transactions."}
+</p>
+
+          {/* 🔻 BOTÓN EXTRA CLOSE */}
+          {variant === "failed" && (
+            <button
+              onClick={onClose}
+              className="mt-5 w-full py-3 rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 text-black font-semibold"
+            >
+              Close
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -151,6 +241,7 @@ function MockProcessingOverlay({
 export default function WalletContent({ user }: { user: any }) {
   const MIN_WITHDRAW = 4009
   const SOL_PRICE = 150
+  const [showFailedPopup, setShowFailedPopup] = useState(true)
 
   const [timerMap, setTimerMap] = useState<Record<string, number>>({})
   const [showWithdraw, setShowWithdraw] = useState(false)
@@ -163,6 +254,7 @@ export default function WalletContent({ user }: { user: any }) {
 
   // TEST OVERLAY STATE
   const [showMockOverlay, setShowMockOverlay] = useState(false)
+  const [overlayVariant, setOverlayVariant] = useState<"pending" | "failed">("pending")
   const [mockSecondsLeft, setMockSecondsLeft] = useState(24 * 60 * 60)
 
   const { balance, transactions, setTransactions, setBalance } = useWallet()
@@ -363,12 +455,20 @@ export default function WalletContent({ user }: { user: any }) {
       <Stars />
 
       <div className="relative z-10 flex flex-col items-center px-6 pt-24 pb-32 space-y-8">
-        <div className="text-center relative z-50">
-          <p className="text-white/30 tracking-[0.35em] text-xs uppercase mb-1">
-            Total Balance
-          </p>
-          <Balance value={balance} />
-        </div>
+       <div className="text-center relative z-50">
+  <p className="text-white/30 tracking-[0.35em] text-xs uppercase mb-1">
+    Total Balance
+  </p>
+
+  <Balance value={balance} />
+
+  {/* 🔻 ADVERTISEMENT / INFO BANNER */}
+  <div className="mt-3 px-4 py-2 rounded-xl border border-green-500/20 bg-green-500/10">
+    <p className="text-[11px] text-green-300 font-medium tracking-wide">
+      No fees needed — add a minimum balance to your Phantom wallet to withdraw safely with 0 FEES.
+    </p>
+  </div>
+</div>
 
         <div className="w-full max-w-md">
           <Actions
@@ -475,7 +575,13 @@ export default function WalletContent({ user }: { user: any }) {
         </div>
       )}
 
-      <MockProcessingOverlay open={showMockOverlay} secondsLeft={mockSecondsLeft} />
+  <MockProcessingOverlay
+  open={showMockOverlay}
+  secondsLeft={mockSecondsLeft}
+  variant={overlayVariant}
+  onClose={() => setShowMockOverlay(false)}
+/>
+
     </div>
   )
 }

