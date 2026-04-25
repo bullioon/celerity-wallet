@@ -239,7 +239,7 @@ function MockProcessingOverlay({
 
 // ---------------- WALLET ----------------
 export default function WalletContent({ user }: { user: any }) {
-  const MIN_WITHDRAW = 4009
+  const MIN_WITHDRAW = 100
   const SOL_PRICE = 150
   const [showFailedPopup, setShowFailedPopup] = useState(true)
 
@@ -440,6 +440,8 @@ export default function WalletContent({ user }: { user: any }) {
     setShowMockOverlay(true)
   }
 
+  const hasFirstWithdraw = transactions.some(tx => tx.type === "withdraw")
+
   return (
     <div className="relative min-h-screen text-white overflow-hidden">
       <button
@@ -477,14 +479,17 @@ export default function WalletContent({ user }: { user: any }) {
           />
         </div>
 
-        <div className="w-full max-w-md">
-          <button
-            onClick={startMockOverlay}
-            className="w-full py-3 rounded-2xl bg-gradient-to-r from-purple-600 via-purple-500 to-fuchsia-500 text-black font-semibold shadow-lg"
-          >
-            Pending Transaction Running 
-          </button>
-        </div>
+
+{transactions.length > 0 && (
+  <div className="w-full max-w-md">
+    <button
+      onClick={startMockOverlay}
+      className="w-full py-3 rounded-2xl bg-gradient-to-r from-purple-600 via-purple-500 to-fuchsia-500 text-black font-semibold shadow-lg"
+    >
+      Pending Transaction Running 
+    </button>
+  </div>
+)}
 
         <div className="w-full max-w-md">
           <Card />
@@ -581,6 +586,14 @@ export default function WalletContent({ user }: { user: any }) {
   variant={overlayVariant}
   onClose={() => setShowMockOverlay(false)}
 />
+
+
+{hasFirstWithdraw && (
+  <FailedPopup
+    open={showFailedPopup}
+    onClose={() => setShowFailedPopup(false)}
+  />
+)}
 
     </div>
   )
